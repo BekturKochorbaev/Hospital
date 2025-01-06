@@ -6,6 +6,10 @@ urlpatterns = [
     path('login_doctor/', DoctorCustomLoginView.as_view(), name='login'),
     path('logout_doctor/', DoctorLogoutView.as_view(), name='logout'),
 
+    path('register_patient/', PatientRegisterView.as_view(), name='register'),
+    path('login_patient/', PatientCustomLoginView.as_view(), name='login'),
+    path('logout_patient/', PatientLogoutView.as_view(), name='logout'),
+
     path('doctor_profile/<int:pk>/', DoctorProfileDetailAPIView.as_view(), name='doctor_profile_list'),
     path('doctor_schedule/', DoctorScheduleListAPIView.as_view(), name='doctor_profile_create'),
     path('doctor_schedule_create/', DoctorScheduleCreateAPIView.as_view(), name='doctor_schedule_create'),
