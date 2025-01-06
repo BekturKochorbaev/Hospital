@@ -9,6 +9,11 @@ class PatientProfileSimpleSerializers(serializers.ModelSerializer):
         model = PatientProfile
         fields = ['first_name', 'last_name']
 
+class PatientDoctorReviewSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = DoctorProfile
+        fields = ['first_name', 'last_name']
+
 
 class DoctorProfileSimpleSerializers(serializers.ModelSerializer):
     class Meta:
@@ -98,6 +103,7 @@ class PrescriptionCreateSerializers(serializers.ModelSerializer):
         model = Prescription
         fields = "__all__"
 
+
 class BillingsListCreateSerializers(serializers.ModelSerializer):
     date = serializers.DateTimeField('%d-%m-%Y %H-%M')
     patients = serializers.SerializerMethodField()
@@ -128,26 +134,10 @@ class WardsCreateSerializers(serializers.ModelSerializer):
         fields = '__all__'
 
 
-
-class FeedbackListSerializers(serializers.ModelSerializer):
-    patient = serializers.SerializerMethodField()
-    doctor = serializers.SerializerMethodField()
-
+class FeedbackSerializers(serializers.ModelSerializer):
     class Meta:
         model = Feedback
-        fields = ['patient', 'rating', 'doctor', 'comment']
-
-    def get_patient(self, obj):
-        return f"{obj.patient.first_name} {obj.patient.last_name}"
-
-    def get_doctor(self, obj):
-        return f"{obj.doctor.first_name} {obj.doctor.last_name}"
-
-
-class FeedbackCreateSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = Feedback
-        fields = '__all__'
+        fields = ['patient', 'doctor', 'rating', 'comment']
 
 
 class Name_Direction_and_ServicesSerializers(serializers.ModelSerializer):

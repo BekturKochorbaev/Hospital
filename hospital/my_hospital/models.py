@@ -98,7 +98,7 @@ class Direction_and_Services(models.Model):
 
 
 class Name_Direction_and_Services(models.Model):
-    name = models.ForeignKey(Direction_and_Services, on_delete=models.CASCADE, related_name='service_name')
+    direction = models.ForeignKey(Direction_and_Services, on_delete=models.CASCADE, related_name='service_name')
     description = models.CharField(max_length=250)
 
 

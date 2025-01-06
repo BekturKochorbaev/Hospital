@@ -4,7 +4,7 @@ from rest_framework import routers
 
 
 router = routers.SimpleRouter()
-# router.register(r'wards', WardsViewSet, basename='wards')
+router.register(r'feedback', FeedbackViewSet, basename='feedback')
 
 
 urlpatterns = [
@@ -24,9 +24,9 @@ urlpatterns = [
     path('billings_create_list/', BillingsListCreateAPIView.as_view(), name='billings_create_list'),
     path('billings_create_list/<int:pk>/', BillingsDetailDeleteCreateAPIView.as_view(), name='billings_detail'),
 
-    path('feedback/', FeedbackListAPIView.as_view(), name='feedback'),
-    path('feedback/<int:pk>/', FeedbackDetailDeleteUpdateAPIView.as_view(), name='feedback_delete'),
-    path('feedback_create/', FeedbackCreateAPIView.as_view(), name='feedback_create'),
+    # path('feedback/', FeedbackListAPIView.as_view(), name='feedback'),
+    # path('feedback/<int:pk>/', FeedbackDetailDeleteUpdateAPIView.as_view(), name='feedback_delete'),
+    # path('feedback_create/', FeedbackCreateAPIView.as_view(), name='feedback_create'),
 
     path('departments/', DepartmentListAPIView.as_view(), name='departments'),
 
@@ -39,5 +39,8 @@ urlpatterns = [
     path('price_list/', PriceListSerializersAPIView.as_view(), name='price_list'),
 
     path('hospital_profile/', HospitalProfileListAPIView.as_view(), name='hospital_profile'),
+
+    path('doctor_profile/', DoctorProfileListAPIView.as_view(), name='hospital_profile_list'),
+
 
 ]

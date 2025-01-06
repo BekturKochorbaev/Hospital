@@ -82,8 +82,8 @@ class Profile(AbstractUser):
 class DoctorProfile(Profile):
     specialty = models.CharField(max_length=30, choices=SPECIALTIES)
     department = models.CharField(max_length=30, choices=HOSPITAL_DEPARTMENTS)
-    shift_start = models.TimeField()
-    shift_end = models.TimeField()
+    shift_start = models.TimeField(null=True, blank=True)
+    shift_end = models.TimeField(null=True, blank=True)
     working_days = MultiSelectField(choices=WORK_DAYS, max_choices=3)
     role = models.CharField(max_length=15, choices=[('doctor', 'doctor')], default='doctor')
     price = models.PositiveIntegerField(default=200)

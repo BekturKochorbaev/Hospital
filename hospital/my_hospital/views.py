@@ -1,14 +1,21 @@
 from django.shortcuts import render
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework.pagination import PageNumberPagination
+
+from .permissions import CheckDoctor, CheckPatient, CheсkReview
 from .serializers import *
+from profile_app.models import *
 from rest_framework import viewsets, generics
+from rest_framework import permissions
+
+class Pagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 100
 
 
 class DepartmentListAPIView(generics.ListAPIView):
-    queryset = Departments.objects.all()
-    serializer_class = DepartmentsSerializers
-
-
-class DepartmentListAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Departments.objects.all()
     serializer_class = DepartmentsSerializers
 
@@ -21,11 +28,13 @@ class AppointmentListAPIView(generics.ListAPIView):
 class AppointmentCreateAPIView(generics.CreateAPIView):
     queryset = Appointment.objects.all()
     serializer_class = AppointmentCreateSerializers
+    permission_classes = [CheckPatient]
 
 
 class AppointmentDetailDeleteUpdateAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Appointment.objects.all()
     serializer_class = AppointmentListSerializers
+    permission_classes = [CheckPatient]
 
 
 class MedicalRecordListAPIView(generics.ListAPIView):
@@ -36,11 +45,13 @@ class MedicalRecordListAPIView(generics.ListAPIView):
 class MedicalRecordCreateAPIView(generics.CreateAPIView):
     queryset = MedicalRecord.objects.all()
     serializer_class = MedicalRecordCreateSerializers
+    permission_classes = [CheckDoctor]
 
 
 class MedicalRecordDetailDeleteUpdateAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = MedicalRecord.objects.all()
     serializer_class = MedicalRecordListSerializers
+    permission_classes = [CheckDoctor]
 
 
 class PrescriptionListAPIView(generics.ListAPIView):
@@ -51,21 +62,25 @@ class PrescriptionListAPIView(generics.ListAPIView):
 class PrescriptionDetailUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Prescription.objects.all()
     serializer_class = PrescriptionListSerializers
+    permission_classes = [CheckDoctor]
 
 
 class PrescriptionCreateAPIView(generics.CreateAPIView):
     queryset = Prescription.objects.all()
     serializer_class = PrescriptionListSerializers
+    permission_classes = [CheckDoctor]
 
 
 class BillingsListCreateAPIView(generics.ListCreateAPIView):
     queryset = Billings.objects.all()
     serializer_class = BillingsListCreateSerializers
+    permission_classes = [CheckDoctor]
 
 
 class BillingsDetailDeleteCreateAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Billings.objects.all()
     serializer_class = BillingsListCreateSerializers
+    permission_classes = [CheckDoctor]
 
 
 class WardsListAPIView(generics.ListAPIView):
@@ -76,20 +91,18 @@ class WardsListAPIView(generics.ListAPIView):
 class WardsCreateAPIView(generics.CreateAPIView):
     queryset = Wards.objects.all()
     serializer_class = WardsCreateSerializers
+    permission_classes = [CheckDoctor]
 
 
-class FeedbackListAPIView(generics.ListAPIView):
+# class FeedbackListAPIView(generics.ListAPIView):
+#     queryset = Feedback.objects.all()
+#     serializer_class = FeedbackListSerializers
+
+
+class FeedbackViewSet(viewsets.ModelViewSet):
     queryset = Feedback.objects.all()
-    serializer_class = FeedbackListSerializers
-
-
-class FeedbackCreateAPIView(generics.CreateAPIView):
-    serializer_class = FeedbackCreateSerializers
-
-
-class FeedbackDetailDeleteUpdateAPIView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Feedback.objects.all()
-    serializer_class = FeedbackCreateSerializers
+    serializer_class = FeedbackSerializers
+    permission_classes = [permissions.IsAuthenticated, CheсkReview]
 
 
 class Direction_and_ServicesListAPIView(generics.ListAPIView):
@@ -110,3 +123,15 @@ class PriceListSerializersAPIView(generics.ListAPIView):
 class HospitalProfileListAPIView(generics.ListAPIView):
     queryset = HospitalProfile.objects.all()
     serializer_class = HospitalProfileSerializers
+
+
+class DoctorProfileListAPIView(generics.ListAPIView):
+    queryset = DoctorProfile.objects.all()
+    serializer_class = DoctorProfileSimpleSerializers
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    search_fields = ['department', 'specialty', 'price', 'working_days']
+    ordering_fields = ['price']
+    pagination_class = Pagination
+
+    # def get_queryset(self):
+    #     return DoctorProfile.objects.filter(id=self.request.user.id)
